@@ -12,7 +12,7 @@
 <main class="container-fluid">
     <nav class="container-fluid sticky-top">
         <div class="row bg-light border-bottom align-items-center" style="height:85px">
-            <div class="col-6 col-sm-3 col-md-2">
+            <div class="col-6 col-sm-3 col-md-2 ">
                 <img src="img/Rectangle89.png" class="img-fluid" style="height:85px;" alt="" />
             </div>
             <div class="col-12 col-sm-6 col-md-7 pt-2">
@@ -41,29 +41,24 @@
             </div>
             <div class="col-1 col-md-1 pt-2 position-relative d-none d-md-block">
                 <i class="bi bi-bell-fill fs-2 text-primary notification-icon"></i>
-
-                @if (data.Count > 0)
-                {
                     <!-- Badge hiển thị số lượng thông báo -->
                     <span class=" top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        @data.Count
+                        @unreadCount
                         <span class="visually-hidden">unread messages</span>
                     </span>
-                }
-
-                <ul class="notification-list position-absolute list-group">
-                    @foreach (var item in data)
-                    {
-                        <li class="list-group-item fw-bold" style="height:100px" @onclick="() => HandleNotificationClick(item)">
-                            <i class="bi bi-megaphone text-danger"></i> @item.Title <br />
-                            <p class="fw-light text-wrap">@ShortenContent(item.Content, 50)</p>
-                            <p class="fs-6 fst-italic fw-light" style="padding-top:-10px">@item.CreationTime</p>
-                        </li>
-                    }
-                </ul>
+                    <ul class="notification-list position-absolute list-group">
+                        @foreach (var item in data)
+                        {
+                            <li class="list-group-item fw-bold " style="height:100px" @onclick="() => HandleNotificationClick(item)">
+                                
+                                <i class="bi bi-megaphone text-danger"></i> @item.Title <br />
+                                <p class="fw-light text-wrap">@ShortenContent(item.Content, 50)</p>
+                                <p class="fs-6 fst-italic fw-light" style="padding-top:-10px">@item.CreationTime</p>
+                            </li>
+                        }
+                    </ul>
             </div>
-
-     </div>
+        </div>
     </nav>
     <!-- Article content -->
     <article class="content  px-4">
@@ -94,17 +89,21 @@
 </footer>
 @code {
     private List<NotificationDTO> data = new List<NotificationDTO>();
-
+    private int unreadCount = 0;
     protected override async Task OnInitializedAsync()
     {
-       
+
         data = await httpclient.GetFromJsonAsync<List<NotificationDTO>>("api/Notification/get-all-notification");
-    
+        unreadCount = data.Count;
     }
     private void HandleNotificationClick(NotificationDTO item)
     {
         // Xử lý click vào thông báo, xóa thông báo khỏi danh sách
-        data.Remove(item);
+        if (unreadCount > 0)
+        {
+            unreadCount--;
+            StateHasChanged();
+        }
 
         // Optional: Có thể cập nhật số lượng theo cách khác
         // data.Count được cập nhật tự động vì số lượng sẽ phụ thuộc vào độ dài của list 'data'
