@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
+<!--<<<<<<< HEAD
 =======
     <ProjectReference Include="..\API\API.csproj" />
->>>>>>> ff411c3dac364bb192d52cae239ca95ed8a3cc3b
+>>>>>>> ff411c3dac364bb192d52cae239ca95ed8a3cc3b-->
     <ProjectReference Include="..\Database\Database.csproj" />
   </ItemGroup>
 
