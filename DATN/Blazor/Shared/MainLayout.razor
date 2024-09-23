@@ -1,19 +1,103 @@
 ﻿@inherits LayoutComponentBase
-
+@using Database.DTOs
+@using System.Text.Json
+@inject HttpClient httpclient
 <PageTitle>Blazor</PageTitle>
 
-<div class="page">
+@* <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        < />
+    </div> *@
+
+<main class="container-fluid">
+    <nav class="container-fluid sticky-top">
+        <div class="row bg-light border-bottom " style="height:85px">
+            <div class="col-2">
+                <img src="img/Rectangle89.png" style="height:100px; margin-left:50px" alt="" />
+            </div>
+            <div class="col-7 pt-4">
+                <ul class="nav">
+                    <li class="nav-item d-flex">
+                        <i class="bi bi-house-door-fill fs-4 text-primary"></i><a class="nav-link fw-bolder active text-black-50" aria-current="page" href="#">Trang chủ</a>
+                    </li>
+                    <li class="nav-item d-flex">
+                        <i class="bi bi-mortarboard-fill fs-4 text-primary"></i><a class="nav-link fw-bolder text-black-50" href="#">Thi online</a>
+                    </li>
+                    <li class="nav-item d-flex">
+                        <i class="bi bi-info-circle-fill fs-4 text-primary"></i><a class="nav-link fw-bolder text-black-50" href="#">Giới thiệu</a>
+                    </li>
+                    <li class="nav-item d-flex">
+                        <i class="bi bi-person-rolodex fs-4 text-primary"></i><a class="nav-link fw-bolder text-black-50" aria-disabled="true">Liên hệ</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-2 pt-4">
+                <div class="d-flex justify-content-end">
+                    <i class="bi bi-person-circle fs-2 text-primary"></i><button class="btn fw-bold text-black-50">Đăng nhập</button>
+                </div>
+            </div>
+                <div class="col-1 pt-4 position-relative">
+                <i class="bi bi-bell-fill fs-2 text-primary notification-icon"></i>
+                <ul class="notification-list position-fixed list-group ">
+                    @foreach(var item in data)
+                    {
+                        <li class="list-group-item fw-bold" style="height:100px">
+                            <i class="bi bi-megaphone text-danger"></i> @item.Title <br />
+                            <p class="fw-light text-wrap">@ShortenContent(item.Content, 50)</p>
+                            <p class="fs-6 fst-italic fw-light" style="padding-top -10px">@item.CreationTime</p>
+                       </li>
+                    }
+                 </ul>
+            </div>
+     </div>
+    </nav>
+    <!-- Article content -->
+    <article class="content  px-4">
+        @Body
+    </article>
+</main>
+<!-- Footer -->
+<footer class="container-fluid">
+    <div class="row bg-dark-subtle py-3">
+       <div class="col-4">
+           <img class="w-50 h-100" style="margin-left:100px" src="img/Rectangle89.png" alt="Alternate Text" />
+       </div>
+       <div class="col-4 py-2">
+           <div class="row">
+               <p>Địa chỉ:</p>
+           </div>
+            <div class="row">
+                <p>Số điện thoại:</p>
+            </div>
+            <div class="row">
+                <p>Email:</p>
+            </div>
+            <div class="row">
+                <p>Wepsite:</p>
+            </div>
+       </div>
     </div>
+</footer>
+@code {
+    private List<NotificationDTO> data = new List<NotificationDTO>();
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    protected override async Task OnInitializedAsync()
+    {
+       
+        data = await httpclient.GetFromJsonAsync<List<NotificationDTO>>("api/Notification/get-all-notification");
+    
+    }
+    private string ShortenContent(string content, int maxLength)
+    {
+        if (string.IsNullOrEmpty(content))
+        {
+            return content;
+        }
+        // Kiểm tra độ dài nội dung, nếu vượt quá giới hạn, cắt ngắn và thêm "..."
+        if (content.Length > maxLength)
+        {
+            return content.Substring(0, maxLength) + "...";
+        }
+        return content; // Trả về nguyên nội dung nếu không vượt quá giới hạn
+    }
+}
