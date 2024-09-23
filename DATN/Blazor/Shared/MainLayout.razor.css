@@ -1,11 +1,14 @@
-.page {
+﻿.page {
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
 main {
-    flex: 1;
+    padding-left:0;
+    padding-right:0;
+    width:100%
+
 }
 
 .sidebar {
@@ -20,7 +23,34 @@ main {
     display: flex;
     align-items: center;
 }
+.notification-list {
+        display: none;
+        top: 100%; /* Đặt vị trí dưới icon */
+        left: 0;
+        width: 200px;
+        background-color: white;
+        border: 1px solid #ccc;
+        z-index: 1000;
+        padding: 0;
+    }
 
+    .col-1:hover .notification-list {
+        display: block;
+    }
+
+    .notification-list li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .notification-list li:last-child {
+        border-bottom: none;
+    }
+
+    .notification-list li:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+    }
     .top-row ::deep a, .top-row .btn-link {
         white-space: nowrap;
         margin-left: 1.5rem;
@@ -68,3 +98,54 @@ main {
         padding-right: 1.5rem !important;
     }
 }
+.notification-list {
+    display: none;
+    position: absolute;
+    top: 100%; /* Đặt vị trí dưới icon */
+    left: -250px;
+    overflow: hidden;
+    word-wrap: break-word;
+    width: 350px;
+    background-color: white;
+    border: 3px solid #ccc;
+    z-index: 1000;
+    padding: 0;
+}
+    .notification-list::before {
+        content: "";
+        position: absolute;
+        top: -10px; /* Vị trí của mũi tên */
+        right: 68px; /* Điều chỉnh để căn giữa mũi tên so với icon */
+        border-width: 0 10px 10px 10px;
+        border-style: solid;
+        border-color: transparent transparent lightgray transparent;
+        .col-1:hover .notification-list{
+    display: block;
+
+}
+
+.notification-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+    .notification-list li:last-child {
+        border-bottom: none;
+        
+    }
+
+    .notification-list li:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+       
+    }
+@media (max-width: 576px) {
+    .notification-list {
+        font-size: 0.8rem;
+    }
+
+    .nav-item {
+        font-size: 0.9rem;
+    }
+}
+
