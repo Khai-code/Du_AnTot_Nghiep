@@ -101,8 +101,8 @@ main {
 .notification-list {
     display: none;
     position: absolute;
-    top: 10%; /* Đặt vị trí dưới icon */
-    left: 1150px;
+    top: 100%; /* Đặt vị trí dưới icon */
+    left: -250px;
     overflow: hidden;
     word-wrap: break-word;
     width: 350px;
@@ -139,4 +139,13 @@ main {
         cursor: pointer;
        
     }
+@media (max-width: 576px) {
+    .notification-list {
+        font-size: 0.8rem;
+    }
+
+    .nav-item {
+        font-size: 0.9rem;
+    }
+}
 

@@ -11,44 +11,58 @@
 
 <main class="container-fluid">
     <nav class="container-fluid sticky-top">
-        <div class="row bg-light border-bottom " style="height:85px">
-            <div class="col-2">
-                <img src="img/Rectangle89.png" style="height:100px; margin-left:50px" alt="" />
+        <div class="row bg-light border-bottom align-items-center" style="height:85px">
+            <div class="col-6 col-sm-3 col-md-2">
+                <img src="img/Rectangle89.png" class="img-fluid" style="height:85px;" alt="" />
             </div>
-            <div class="col-7 pt-4">
-                <ul class="nav">
+            <div class="col-12 col-sm-6 col-md-7 pt-2">
+                <ul class="nav justify-content-center">
                     <li class="nav-item d-flex">
-                        <i class="bi bi-house-door-fill fs-4 text-primary"></i><a class="nav-link fw-bolder active text-black-50" aria-current="page" href="#">Trang chủ</a>
+                        <i class="bi bi-house-door-fill fs-4 text-primary"></i>
+                        <a class="nav-link fw-bolder active text-black-50" aria-current="page" href="#">Trang chủ</a>
                     </li>
                     <li class="nav-item d-flex">
-                        <i class="bi bi-mortarboard-fill fs-4 text-primary"></i><a class="nav-link fw-bolder text-black-50" href="#">Thi online</a>
+                        <i class="bi bi-mortarboard-fill fs-4 text-primary"></i>
+                        <a class="nav-link fw-bolder text-black-50" href="#">Thi online</a>
                     </li>
                     <li class="nav-item d-flex">
-                        <i class="bi bi-info-circle-fill fs-4 text-primary"></i><a class="nav-link fw-bolder text-black-50" href="#">Giới thiệu</a>
+                        <i class="bi bi-info-circle-fill fs-4 text-primary"></i>
+                        <a class="nav-link fw-bolder text-black-50" href="#">Giới thiệu</a>
                     </li>
                     <li class="nav-item d-flex">
-                        <i class="bi bi-person-rolodex fs-4 text-primary"></i><a class="nav-link fw-bolder text-black-50" aria-disabled="true">Liên hệ</a>
+                        <i class="bi bi-person-rolodex fs-4 text-primary"></i>
+                        <a class="nav-link fw-bolder text-black-50" aria-disabled="true">Liên hệ</a>
                     </li>
                 </ul>
             </div>
-            <div class="col-2 pt-4">
-                <div class="d-flex justify-content-end">
-                    <i class="bi bi-person-circle fs-2 text-primary"></i><button class="btn fw-bold text-black-50">Đăng nhập</button>
-                </div>
+            <div class="col-6 col-sm-3 col-md-2 pt-2 d-flex justify-content-end">
+                <i class="bi bi-person-circle fs-2 text-primary"></i>
+                <button class="btn fw-bold text-black-50">Đăng nhập</button>
             </div>
-                <div class="col-1 pt-4 position-relative">
+            <div class="col-1 col-md-1 pt-2 position-relative d-none d-md-block">
                 <i class="bi bi-bell-fill fs-2 text-primary notification-icon"></i>
-                <ul class="notification-list position-fixed list-group ">
-                    @foreach(var item in data)
+
+                @if (data.Count > 0)
+                {
+                    <!-- Badge hiển thị số lượng thông báo -->
+                    <span class=" top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        @data.Count
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                }
+
+                <ul class="notification-list position-absolute list-group">
+                    @foreach (var item in data)
                     {
-                        <li class="list-group-item fw-bold" style="height:100px">
+                        <li class="list-group-item fw-bold" style="height:100px" @onclick="() => HandleNotificationClick(item)">
                             <i class="bi bi-megaphone text-danger"></i> @item.Title <br />
                             <p class="fw-light text-wrap">@ShortenContent(item.Content, 50)</p>
-                            <p class="fs-6 fst-italic fw-light" style="padding-top -10px">@item.CreationTime</p>
-                       </li>
+                            <p class="fs-6 fst-italic fw-light" style="padding-top:-10px">@item.CreationTime</p>
+                        </li>
                     }
-                 </ul>
+                </ul>
             </div>
+
      </div>
     </nav>
     <!-- Article content -->
@@ -86,6 +100,14 @@
        
         data = await httpclient.GetFromJsonAsync<List<NotificationDTO>>("api/Notification/get-all-notification");
     
+    }
+    private void HandleNotificationClick(NotificationDTO item)
+    {
+        // Xử lý click vào thông báo, xóa thông báo khỏi danh sách
+        data.Remove(item);
+
+        // Optional: Có thể cập nhật số lượng theo cách khác
+        // data.Count được cập nhật tự động vì số lượng sẽ phụ thuộc vào độ dài của list 'data'
     }
     private string ShortenContent(string content, int maxLength)
     {
