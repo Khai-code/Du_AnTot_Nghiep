@@ -101,7 +101,7 @@ namespace API.Controllers
         {
             try
             {
-                var grade = await _db.classes.FirstOrDefaultAsync(x => x.GradeId == classDTO.GradeId);
+                var grade = await _db.grades.FirstOrDefaultAsync(x => x.Id == classDTO.GradeId);
 
                 if (grade == null)
                 {
@@ -124,19 +124,19 @@ namespace API.Controllers
                 await _db.classes.AddAsync(data);
                 await _db.SaveChangesAsync();
 
-                foreach (var NotificationId in classDTO.NotificationIds)
-                {
-                    var notification_class = new Notification_Class
-                    {
-                        Id = Guid.NewGuid(),
-                        NotificationId = NotificationId,
-                        ClassId = data.Id,
-                        Status = 1
-                    };
+                //foreach (var NotificationId in classDTO.NotificationIds)
+                //{
+                //    var notification_class = new Notification_Class
+                //    {
+                //        Id = Guid.NewGuid(),
+                //        NotificationId = NotificationId,
+                //        ClassId = data.Id,
+                //        Status = 1
+                //    };
 
-                    await _db.notification_Classes.AddAsync(notification_class);
-                    await _db.SaveChangesAsync();
-                }
+                //    await _db.notification_Classes.AddAsync(notification_class);
+                //    await _db.SaveChangesAsync();
+                //}
 
                 return Ok("Them thanh công");
 

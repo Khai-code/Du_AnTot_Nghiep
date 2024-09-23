@@ -70,12 +70,35 @@ namespace API.Controllers
                     Id = Guid.NewGuid(),
                     Title = notification.Title,
                     Content = notification.Content,
-                    CreationTime = notification.CreationTime,
+                    CreationTime = DateTime.UtcNow,
                     Status = notification.Status,
                     type = notification.type,
                 };
                 await _db.notifications.AddAsync(noti);
                 await _db.SaveChangesAsync();
+
+                if (noti.type == 1)
+                {
+                    var validClasses = _db.classes
+                                       .Where(c => notification.ClassIds.Contains(c.Id))
+                                       .Select(c => c.Id)
+                                       .ToList();
+
+                    if (validClasses.Any())
+                    {
+                        var notificationClasses = validClasses.Select(classId => new Notification_Class
+                        {
+                            Id = Guid.NewGuid(),
+                            NotificationId = noti.Id,
+                            ClassId = classId,
+                            Status = 1
+                        }).ToList();
+
+                        _db.notification_Classes.AddRange(notificationClasses);
+                        await _db.SaveChangesAsync();
+                    }
+                }
+
                 return Ok("Thêm thành công");
             }
             catch (Exception)
